@@ -78,7 +78,63 @@ class DatabaseManager:
         await self._connection.executescript(schema_sql)
         await self._connection.commit()
 
+        # Run migrations for existing databases
+        await self._run_migrations()
+
         logger.debug("Database schema initialized")
+
+    async def _run_migrations(self) -> None:
+        """Run migrations to update existing databases."""
+        # Check current schema version (use direct connection, not public methods)
+        try:
+            cursor = await self._connection.execute(
+                "SELECT value FROM system_metadata WHERE key = 'schema_version'"
+            )
+            row = await cursor.fetchone()
+            current_version = int(row["value"]) if row else 0
+        except Exception:
+            current_version = 0
+
+        # Migration v1 -> v2: Add datetime column to price_data
+        # Always check for column existence regardless of version (idempotent)
+        await self._migration_v2_add_datetime_column()
+
+    async def _migration_v2_add_datetime_column(self) -> None:
+        """Add datetime generated column to price_data table."""
+        try:
+            # Check if column already exists by trying to select it
+            # (VIRTUAL columns don't show in PRAGMA table_info)
+            try:
+                cursor = await self._connection.execute(
+                    "SELECT datetime FROM price_data LIMIT 1"
+                )
+                await cursor.fetchone()
+                # If we get here, column exists
+                logger.debug("datetime column already exists")
+            except Exception:
+                # Column doesn't exist, add it
+                logger.info("Running migration v2: Adding datetime column to price_data")
+                # Note: SQLite only allows adding VIRTUAL generated columns, not STORED
+                await self._connection.execute(
+                    """
+                    ALTER TABLE price_data ADD COLUMN datetime TEXT 
+                    GENERATED ALWAYS AS (
+                        strftime('%Y-%m-%d %H:%M:%S', timestamp/1000, 'unixepoch')
+                    ) VIRTUAL
+                    """
+                )
+                await self._connection.commit()
+                logger.info("Migration v2 complete: datetime column added")
+
+            # Update schema version
+            await self._connection.execute(
+                "INSERT OR REPLACE INTO system_metadata (key, value) VALUES ('schema_version', '2')"
+            )
+            await self._connection.commit()
+
+        except Exception as e:
+            logger.error(f"Migration v2 failed: {e}")
+            raise
 
     @asynccontextmanager
     async def connection(self):

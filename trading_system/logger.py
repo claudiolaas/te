@@ -52,15 +52,27 @@ class LogManager:
         """Get or create a logger for a specific component.
 
         Each component gets its own log file in addition to console output.
+        Auto-initializes with defaults if not already initialized.
         """
         if name in self._loggers:
             return self._loggers[name]
+
+        # Auto-initialize with defaults if not done yet
+        if self._formatter is None:
+            self._log_dir.mkdir(parents=True, exist_ok=True)
+            self._formatter = logging.Formatter(
+                fmt="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+                datefmt="%Y-%m-%d %H:%M:%S",
+            )
 
         logger = logging.getLogger(f"trading_system.{name}")
         logger.setLevel(self._log_level)
 
         # Prevent propagation to avoid duplicate logs
         logger.propagate = False
+
+        # Ensure log directory exists before creating file handler
+        self._log_dir.mkdir(parents=True, exist_ok=True)
 
         # Add file handler for this component
         log_file = self._log_dir / f"{name}.log"

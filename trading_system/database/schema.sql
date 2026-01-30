@@ -36,6 +36,10 @@ CREATE TABLE IF NOT EXISTS price_data (
     close REAL NOT NULL,
     volume REAL NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- Human-readable datetime (ISO 8601 format), auto-generated from timestamp
+    datetime TEXT GENERATED ALWAYS AS (
+        strftime('%Y-%m-%d %H:%M:%S', timestamp/1000, 'unixepoch')
+    ) VIRTUAL,
     
     FOREIGN KEY (symbol_id) REFERENCES symbols(id) ON DELETE CASCADE,
     UNIQUE(symbol_id, timestamp)           -- Prevent duplicate candles
@@ -156,4 +160,4 @@ CREATE TABLE IF NOT EXISTS system_metadata (
 );
 
 -- Initialize schema version
-INSERT OR REPLACE INTO system_metadata (key, value) VALUES ('schema_version', '1');
+INSERT OR REPLACE INTO system_metadata (key, value) VALUES ('schema_version', '2');

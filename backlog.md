@@ -259,31 +259,33 @@ use uv for dependency and venv management
 
 **Goal**: Provide REST endpoints for symbol registration and backfill triggering.
 
-### TASK-14: REST API Server Setup
+### ✅ TASK-14: REST API Server Setup
 
 **Description**: Set up FastAPI (or similar) async web server.
 
 **Acceptance Criteria**:
-- [ ] `api.py` with FastAPI app instance
-- [ ] Health check endpoint `/health`
-- [ ] Unit test verifies server starts and responds
-- [ ] Async startup/shutdown lifecycle hooks
+- [x] `api.py` with FastAPI app instance
+- [x] Health check endpoint `/health`
+- [x] Unit test verifies server starts and responds
+- [x] Async startup/shutdown lifecycle hooks
 
 **Dependencies**: TASK-1
 
 **Complexity**: S
 
+**Status**: ✅ Complete
+
 ---
 
-### TASK-15: Symbol Registration Endpoint
+### ✅ TASK-15: Symbol Registration Endpoint
 
 **Description**: POST endpoint to register new symbols with automatic backfill.
 
 **Acceptance Criteria**:
-- [ ] `POST /symbols` endpoint accepting `{symbol: "BTC/USDT"}`
-- [ ] Unit test verifies symbol is registered and backfill triggered
-- [ ] Returns 400 if symbol already registered
-- [ ] Returns 201 with backfill status on success
+- [x] `POST /symbols` endpoint accepting `{symbol: "BTC/USDT"}`
+- [x] Unit test verifies symbol is registered and backfill triggered
+- [x] Returns 400 if symbol already registered
+- [x] Returns 201 with backfill status on success
 
 **Dependencies**: TASK-14, TASK-6, TASK-10
 
@@ -291,14 +293,14 @@ use uv for dependency and venv management
 
 ---
 
-### TASK-16: List Symbols Endpoint
+### ✅ TASK-16: List Symbols Endpoint
 
 **Description**: GET endpoint to list all registered symbols.
 
 **Acceptance Criteria**:
-- [ ] `GET /symbols` endpoint
-- [ ] Unit test returns list of active symbols
-- [ ] Optional query param for active/inactive filter
+- [x] `GET /symbols` endpoint
+- [x] Unit test returns list of active symbols
+- [x] Optional query param for active/inactive filter
 
 **Dependencies**: TASK-14, TASK-6
 
@@ -310,15 +312,15 @@ use uv for dependency and venv management
 
 **Goal**: Wire all components together into a runnable system.
 
-### TASK-17: Application Main Entry Point
+### ✅ TASK-17: Application Main Entry Point
 
 **Description**: Main application that starts heartbeat and API server concurrently.
 
 **Acceptance Criteria**:
-- [ ] `main.py` that starts both heartbeat and API
-- [ ] Graceful shutdown handling for both components
-- [ ] Proper dependency injection of services
-- [ ] Integration test verifies full startup/shutdown
+- [x] `main.py` that starts both heartbeat and API
+- [x] Graceful shutdown handling for both components
+- [x] Proper dependency injection of services
+- [x] Integration test verifies full startup/shutdown
 
 **Dependencies**: TASK-13, TASK-14
 
@@ -326,19 +328,35 @@ use uv for dependency and venv management
 
 ---
 
-### TASK-18: End-to-End Testing
+### ✅ TASK-18: End-to-End Testing
 
 **Description**: Full system test with mocked Binance API.
 
 **Acceptance Criteria**:
-- [ ] Register a symbol via API
-- [ ] Verify backfill creates historical records
-- [ ] Verify heartbeat fetches and stores new prices
-- [ ] Verify logs are written per-component
+- [x] Register a symbol via API
+- [x] Verify backfill creates historical records
+- [x] Verify heartbeat fetches and stores new prices
+- [x] Verify logs are written per-component
 
 **Dependencies**: TASK-17
 
 **Complexity**: L
+
+---
+
+## Bonus Features (Post-MVP)
+
+### ✅ TASK-19: Price Chart Visualization
+
+**Description**: Interactive Plotly HTML chart for viewing historical price data.
+
+**Acceptance Criteria**:
+- [x] `GET /plot/prices` endpoint returns interactive HTML chart
+- [x] Shows all symbols on log-scale Y-axis
+- [x] Multiple line charts with different start times
+- [x] Unit tests for chart generation
+
+**Status**: ✅ Complete
 
 ---
 
@@ -373,6 +391,6 @@ Items from TBD section and beyond MVP scope:
 | 4: Heartbeat | 3 | M (3) |
 | 5: REST API | 3 | S (2) + M (1) |
 | 6: Integration | 2 | M (1) + L (1) |
-| **Total** | **18** | |
+| **Total** | **18** | **Completed: 18** ✅ |
 
 **Estimated MVP Timeline**: 2-3 weeks (assuming 1 developer, 4-5 tasks/week)

@@ -18,10 +18,18 @@ class PriceData:
     close: float
     volume: float
     created_at: datetime | None = None
+    datetime: str | None = None  # Human-readable ISO 8601 format (e.g., '2024-01-01 12:00:00')
 
     @classmethod
     def from_row(cls, row) -> "PriceData":
         """Create PriceData from database row."""
+        # Handle datetime (generated column may not be in all queries)
+        datetime_val = None
+        try:
+            datetime_val = row["datetime"]
+        except (KeyError, IndexError):
+            pass
+        
         return cls(
             id=row["id"],
             symbol_id=row["symbol_id"],
@@ -31,7 +39,8 @@ class PriceData:
             low=row["low"],
             close=row["close"],
             volume=row["volume"],
-            created_at=datetime.fromisoformat(row["created_at"]) if row["created_at"] else None
+            created_at=datetime.fromisoformat(row["created_at"]) if row["created_at"] else None,
+            datetime=datetime_val
         )
 
 

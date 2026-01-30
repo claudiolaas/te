@@ -26,10 +26,17 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.7.0",
 ]
+plotting = [
+    "plotly>=6.5.2",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+markers = [
+    "integration: marks tests as integration tests (slow, requires external services)",
+    "unit: marks tests as unit tests (fast, isolated)",
+]
 
 [tool.ruff]
 line-length = 100
@@ -43,3 +50,8 @@ python_version = "3.11"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
+
+[dependency-groups]
+dev = [
+    "aiohttp>=3.13.3",
+]
