@@ -12,27 +12,27 @@ logger = logging.getLogger(__name__)
 
 class DatabaseManager:
     """Manages async SQLite database connections and schema.
-    
+
     This class provides:
     - Async connection management with aiosqlite
     - Automatic schema initialization
     - Connection pooling via context managers
     - Safe concurrent access handling
-    
+
     Usage:
         db = DatabaseManager(db_path="data/trading.db")
         await db.initialize()
-        
+
         async with db.connection() as conn:
             cursor = await conn.execute("SELECT * FROM symbols")
             rows = await cursor.fetchall()
-        
+
         await db.close()
     """
 
     def __init__(self, db_path: Path | str) -> None:
         """Initialize database manager.
-        
+
         Args:
             db_path: Path to SQLite database file
         """
@@ -42,7 +42,7 @@ class DatabaseManager:
 
     async def initialize(self) -> None:
         """Initialize database connection and schema.
-        
+
         Creates the database file and parent directories if they don't exist.
         Executes schema.sql to set up tables and indexes.
         """
@@ -83,10 +83,10 @@ class DatabaseManager:
     @asynccontextmanager
     async def connection(self):
         """Get a database connection context manager.
-        
+
         Yields:
             aiosqlite.Connection: Database connection
-            
+
         Raises:
             RuntimeError: If database not initialized
         """
@@ -106,11 +106,11 @@ class DatabaseManager:
         parameters: tuple[Any, ...] | dict[str, Any] = ()
     ) -> aiosqlite.Cursor:
         """Execute a SQL query.
-        
+
         Args:
             sql: SQL statement
             parameters: Query parameters (tuple or dict)
-            
+
         Returns:
             aiosqlite.Cursor: Cursor object
         """
@@ -125,11 +125,11 @@ class DatabaseManager:
         parameters: tuple[Any, ...] | dict[str, Any] = ()
     ) -> aiosqlite.Row | None:
         """Fetch a single row.
-        
+
         Args:
             sql: SQL SELECT statement
             parameters: Query parameters
-            
+
         Returns:
             Single row or None if no results
         """
@@ -143,11 +143,11 @@ class DatabaseManager:
         parameters: tuple[Any, ...] | dict[str, Any] = ()
     ) -> list[aiosqlite.Row]:
         """Fetch all rows.
-        
+
         Args:
             sql: SQL SELECT statement
             parameters: Query parameters
-            
+
         Returns:
             List of rows
         """

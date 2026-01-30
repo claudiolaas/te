@@ -23,13 +23,13 @@ class PriceFetchResult:
 
 class PriceFetcher:
     """Service that fetches current prices for all registered symbols.
-    
+
     Fetches prices from Binance and stores them in the database.
     Handles per-symbol errors gracefully - one failure doesn't block others.
-    
+
     Usage:
         fetcher = PriceFetcher(binance_client, db_manager)
-        
+
         results = await fetcher.fetch_all()
         for result in results:
             if result.success:
@@ -44,7 +44,7 @@ class PriceFetcher:
         db: DatabaseManager
     ) -> None:
         """Initialize price fetcher.
-        
+
         Args:
             binance_client: Initialized Binance client
             db: Database manager
@@ -56,11 +56,11 @@ class PriceFetcher:
 
     async def fetch_all(self) -> list[PriceFetchResult]:
         """Fetch current prices for all registered symbols.
-        
+
         Fetches prices in batch for efficiency, then stores each
         price in the database. Per-symbol errors are caught and
         reported without affecting other symbols.
-        
+
         Returns:
             List of PriceFetchResult for each symbol
         """
@@ -111,10 +111,10 @@ class PriceFetcher:
         symbol_names: list[str]
     ) -> dict:
         """Fetch tickers batch with retry logic.
-        
+
         Args:
             symbol_names: List of symbol names to fetch
-            
+
         Returns:
             Dict of symbol to ticker data
         """
@@ -126,11 +126,11 @@ class PriceFetcher:
         tickers: dict
     ) -> PriceFetchResult:
         """Process a single symbol's price data.
-        
+
         Args:
             symbol_obj: Symbol database object
             tickers: Dict of fetched tickers
-            
+
         Returns:
             PriceFetchResult
         """
@@ -191,10 +191,10 @@ class PriceFetcher:
         price: float
     ) -> None:
         """Store price data in database.
-        
+
         Stores as a single-point candle where O=H=L=C=price.
         This allows strategies to query consistent OHLCV format.
-        
+
         Args:
             symbol_id: Symbol database ID
             timestamp_ms: Timestamp in milliseconds
@@ -216,10 +216,10 @@ class PriceFetcher:
 
     async def fetch_single(self, symbol: str) -> PriceFetchResult:
         """Fetch price for a single symbol.
-        
+
         Args:
             symbol: Symbol name (e.g., "BTC/USDT")
-            
+
         Returns:
             PriceFetchResult
         """

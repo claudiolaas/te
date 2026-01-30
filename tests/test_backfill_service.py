@@ -155,7 +155,7 @@ class TestBackfillService:
     @pytest.mark.asyncio
     async def test_backfill_retries_on_network_error(self, setup):
         """Test that backfill uses retry mechanism.
-        
+
         Note: The actual retry logic is tested in test_retry.py.
         Here we just verify the service integrates with it.
         """

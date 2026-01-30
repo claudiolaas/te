@@ -50,7 +50,7 @@ class LogManager:
 
     def get_logger(self, name: str) -> logging.Logger:
         """Get or create a logger for a specific component.
-        
+
         Each component gets its own log file in addition to console output.
         """
         if name in self._loggers:

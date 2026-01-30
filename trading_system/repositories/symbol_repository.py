@@ -31,29 +31,29 @@ class Symbol:
 
 class SymbolRepository:
     """Repository for symbol CRUD operations with caching.
-    
+
     Provides in-memory caching for active symbols to reduce database queries.
     Cache is invalidated on symbol registration/deactivation.
-    
+
     Usage:
         repo = SymbolRepository(db_manager)
-        
+
         # Register new symbol
         symbol = await repo.register("BTC/USDT")
-        
+
         # Get by ID (cached)
         symbol = await repo.get(1)
-        
+
         # Get by symbol string (cached)
         symbol = await repo.get_by_symbol("BTC/USDT")
-        
+
         # List all active symbols (cached)
         symbols = await repo.list_active()
     """
 
     def __init__(self, db: DatabaseManager) -> None:
         """Initialize repository.
-        
+
         Args:
             db: Database manager instance
         """
@@ -64,13 +64,13 @@ class SymbolRepository:
 
     async def register(self, symbol: str) -> Symbol:
         """Register a new symbol.
-        
+
         Args:
             symbol: Trading pair symbol (e.g., "BTC/USDT")
-            
+
         Returns:
             Symbol: Created symbol object
-            
+
         Raises:
             ValueError: If symbol already exists
         """
@@ -104,10 +104,10 @@ class SymbolRepository:
 
     async def get(self, symbol_id: int) -> Symbol | None:
         """Get symbol by ID.
-        
+
         Args:
             symbol_id: Symbol database ID
-            
+
         Returns:
             Symbol or None if not found
         """
@@ -132,10 +132,10 @@ class SymbolRepository:
 
     async def get_by_symbol(self, symbol: str) -> Symbol | None:
         """Get symbol by symbol string.
-        
+
         Args:
             symbol: Trading pair symbol (e.g., "BTC/USDT")
-            
+
         Returns:
             Symbol or None if not found
         """
@@ -160,7 +160,7 @@ class SymbolRepository:
 
     async def list_active(self) -> list[Symbol]:
         """List all active symbols.
-        
+
         Returns:
             List of active symbols
         """
@@ -186,10 +186,10 @@ class SymbolRepository:
 
     async def deactivate(self, symbol_id: int) -> bool:
         """Deactivate a symbol (soft delete).
-        
+
         Args:
             symbol_id: Symbol database ID
-            
+
         Returns:
             True if symbol was deactivated, False if not found
         """
@@ -206,11 +206,11 @@ class SymbolRepository:
 
     async def update_last_price(self, symbol_id: int, price: float) -> bool:
         """Update the cached last price for a symbol.
-        
+
         Args:
             symbol_id: Symbol database ID
             price: Current price
-            
+
         Returns:
             True if updated, False if symbol not found
         """

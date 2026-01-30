@@ -17,7 +17,7 @@ T = TypeVar('T')
 @dataclass
 class RetryConfig:
     """Configuration for retry behavior.
-    
+
     Attributes:
         max_attempts: Maximum number of retry attempts (default: 3)
         base_delay: Initial delay between retries in seconds (default: 1.0)
@@ -37,10 +37,10 @@ class RetryConfig:
 
     def calculate_delay(self, attempt: int) -> float:
         """Calculate delay for a given attempt using exponential backoff.
-        
+
         Args:
             attempt: Current attempt number (0-indexed)
-            
+
         Returns:
             Delay in seconds
         """
@@ -53,19 +53,19 @@ def with_retry(
     on_retry: Callable[[Exception, int, float], None] | None = None
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator for adding retry logic with exponential backoff.
-    
+
     Args:
         config: Retry configuration (uses defaults if not provided)
         on_retry: Optional callback called on each retry with (exception, attempt, delay)
-        
+
     Returns:
         Decorated function
-        
+
     Example:
         @with_retry()
         async def fetch_data():
             return await api.get_data()
-        
+
         @with_retry(RetryConfig(max_attempts=5, base_delay=2.0))
         async def critical_operation():
             return await api.critical_call()
@@ -144,9 +144,9 @@ def with_retry(
 
 class RetryableOperation:
     """Class-based retry wrapper for more complex scenarios.
-    
+
     Allows for dynamic retry configuration and state tracking.
-    
+
     Example:
         operation = RetryableOperation(fetch_data, RetryConfig(max_attempts=5))
         result = await operation.execute()
@@ -159,7 +159,7 @@ class RetryableOperation:
         name: str | None = None
     ):
         """Initialize retryable operation.
-        
+
         Args:
             func: Function to wrap
             config: Retry configuration
@@ -172,11 +172,11 @@ class RetryableOperation:
 
     async def execute(self, *args, **kwargs) -> T:
         """Execute the operation with retries.
-        
+
         Args:
             *args: Positional arguments for the wrapped function
             **kwargs: Keyword arguments for the wrapped function
-            
+
         Returns:
             Result of the wrapped function
         """
@@ -224,16 +224,16 @@ async def retry_operation(
     **kwargs
 ) -> T:
     """Execute a function with retry logic (functional API).
-    
+
     Args:
         func: Function to execute
         *args: Positional arguments
         config: Retry configuration
         **kwargs: Keyword arguments
-        
+
     Returns:
         Result of the function
-        
+
     Example:
         result = await retry_operation(
             client.fetch_ticker,

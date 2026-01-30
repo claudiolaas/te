@@ -35,20 +35,20 @@ class HeartbeatStats:
 
 class HeartbeatScheduler:
     """Asyncio-based scheduler that triggers at regular intervals.
-    
+
     The heartbeat aligns to minute boundaries and includes a configurable
     buffer delay to ensure candles are closed before fetching.
-    
+
     Usage:
         async def on_beat(beat_number: int):
             print(f"Beat #{beat_number}")
-        
+
         scheduler = HeartbeatScheduler(
             interval_seconds=60,
             buffer_delay_seconds=5,
             handler=on_beat
         )
-        
+
         await scheduler.start()
         # Runs until interrupted...
         await scheduler.stop()
@@ -62,7 +62,7 @@ class HeartbeatScheduler:
         name: str = "heartbeat"
     ) -> None:
         """Initialize heartbeat scheduler.
-        
+
         Args:
             interval_seconds: Base interval between beats (e.g., 60 for minute)
             buffer_delay_seconds: Additional delay after interval (e.g., 5)
@@ -99,7 +99,7 @@ class HeartbeatScheduler:
 
     async def start(self) -> None:
         """Start the heartbeat scheduler.
-        
+
         Sets up signal handlers and begins the beat loop.
         """
         if self._running:
@@ -221,7 +221,7 @@ class HeartbeatScheduler:
 
     def _calculate_initial_delay(self) -> float:
         """Calculate delay to align to next interval boundary.
-        
+
         Returns:
             Seconds to wait before first beat
         """
@@ -242,7 +242,7 @@ class HeartbeatScheduler:
 
     def _calculate_next_beat_delay(self) -> float:
         """Calculate delay until next beat.
-        
+
         Returns:
             Seconds to wait before next beat
         """

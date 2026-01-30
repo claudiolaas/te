@@ -32,32 +32,32 @@ class OHLCVData:
 
 class BinanceClient:
     """Async Binance API client using CCXT.
-    
+
     Provides:
     - Market data fetching (tickers, OHLCV)
     - Balance/wallet queries
     - Order placement (future use)
     - Rate limiting and error handling
-    
+
     Usage:
         settings = Settings()
         client = BinanceClient(settings)
-        
+
         await client.initialize()
-        
+
         # Fetch current price
         ticker = await client.fetch_ticker("BTC/USDT")
         print(f"BTC price: {ticker.last}")
-        
+
         # Fetch OHLCV for backfill
         candles = await client.fetch_ohlcv("BTC/USDT", since=timestamp)
-        
+
         await client.close()
     """
 
     def __init__(self, settings: Settings) -> None:
         """Initialize Binance client.
-        
+
         Args:
             settings: Application settings with API credentials
         """
@@ -94,13 +94,13 @@ class BinanceClient:
 
     async def fetch_ticker(self, symbol: str) -> TickerData:
         """Fetch current ticker data for a symbol.
-        
+
         Args:
             symbol: Trading pair (e.g., "BTC/USDT")
-            
+
         Returns:
             TickerData with current price information
-            
+
         Raises:
             ccxt.BadSymbol: If symbol is not valid
             ccxt.NetworkError: On network issues
@@ -121,12 +121,12 @@ class BinanceClient:
 
     async def fetch_tickers(self, symbols: list[str]) -> dict[str, TickerData]:
         """Fetch tickers for multiple symbols (batch request).
-        
+
         More efficient than calling fetch_ticker multiple times.
-        
+
         Args:
             symbols: List of trading pairs
-            
+
         Returns:
             Dict mapping symbol to TickerData
         """
@@ -158,13 +158,13 @@ class BinanceClient:
         limit: int | None = None
     ) -> list[OHLCVData]:
         """Fetch OHLCV (candle) data.
-        
+
         Args:
             symbol: Trading pair (e.g., "BTC/USDT")
             timeframe: Candle timeframe (default: '1m')
             since: Start timestamp in milliseconds (optional)
             limit: Maximum number of candles (optional)
-            
+
         Returns:
             List of OHLCVData ordered by timestamp ascending
         """
@@ -192,7 +192,7 @@ class BinanceClient:
 
     async def fetch_balance(self) -> dict[str, dict[str, float]]:
         """Fetch account balance.
-        
+
         Returns:
             Dict mapping currency to {'total': float, 'free': float, 'used': float}
         """

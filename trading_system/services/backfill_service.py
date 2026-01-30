@@ -13,16 +13,16 @@ logger = logging.getLogger(__name__)
 
 class BackfillService:
     """Service for backfilling historical price data.
-    
+
     Handles:
     - Fetching historical OHLCV data from Binance
     - Storing data in the database
     - Retry logic for network failures
     - Timestamp normalization
-    
+
     Usage:
         backfill = BackfillService(binance_client, db_manager, settings)
-        
+
         # Backfill a newly registered symbol
         candles = await backfill.backfill_symbol("BTC/USDT")
         print(f"Backfilled {len(candles)} candles")
@@ -35,7 +35,7 @@ class BackfillService:
         settings: Settings
     ) -> None:
         """Initialize backfill service.
-        
+
         Args:
             binance_client: Initialized Binance client
             db: Database manager
@@ -53,17 +53,17 @@ class BackfillService:
         minutes: int | None = None
     ) -> list[dict]:
         """Backfill historical price data for a symbol.
-        
+
         Fetches OHLCV candles from Binance and stores them in the database.
         Uses the configured BACKFILL_MINUTES if not specified.
-        
+
         Args:
             symbol: Trading pair (e.g., "BTC/USDT")
             minutes: Number of minutes to backfill (default: settings.backfill_minutes)
-            
+
         Returns:
             List of candle data that was stored
-            
+
         Raises:
             ValueError: If symbol is not registered
             ccxt.BadSymbol: If symbol is not valid on exchange
@@ -107,12 +107,12 @@ class BackfillService:
         limit: int
     ) -> list:
         """Fetch OHLCV data with retry logic.
-        
+
         Args:
             symbol: Trading pair
             since_ms: Start timestamp in milliseconds
             limit: Maximum number of candles
-            
+
         Returns:
             List of OHLCV data from exchange
         """
@@ -129,11 +129,11 @@ class BackfillService:
         candles: list
     ) -> list[dict]:
         """Transform OHLCV data to database format.
-        
+
         Args:
             symbol_id: Database ID of the symbol
             candles: List of OHLCVData objects
-            
+
         Returns:
             List of dicts ready for database insertion
         """
@@ -158,10 +158,10 @@ class BackfillService:
 
     async def get_backfill_status(self, symbol: str) -> dict:
         """Get backfill status for a symbol.
-        
+
         Args:
             symbol: Trading pair
-            
+
         Returns:
             Dict with backfill status information
         """

@@ -37,31 +37,31 @@ class PriceData:
 
 class PriceRepository:
     """Repository for OHLCV price data operations.
-    
+
     Provides storage and retrieval of minute-level candle data.
     Optimized for time-series queries with proper indexing.
-    
+
     Usage:
         repo = PriceRepository(db_manager)
-        
+
         # Save single candle
         await repo.save(1, timestamp=1234567890000, open=100.0, high=101.0, 
                        low=99.0, close=100.5, volume=10.5)
-        
+
         # Save multiple candles (batch insert)
         await repo.save_many(symbol_id, candles)
-        
+
         # Get price range
         prices = await repo.get_range(symbol_id, start_time=1234567890000, 
                                       end_time=1234567900000)
-        
+
         # Get latest price
         latest = await repo.get_latest(symbol_id)
     """
 
     def __init__(self, db: DatabaseManager) -> None:
         """Initialize repository.
-        
+
         Args:
             db: Database manager instance
         """
@@ -78,7 +78,7 @@ class PriceRepository:
         volume: float
     ) -> int:
         """Save a single price data point.
-        
+
         Args:
             symbol_id: Symbol database ID
             timestamp: Unix timestamp in milliseconds (should be rounded to minute)
@@ -87,7 +87,7 @@ class PriceRepository:
             low: Low price
             close: Closing price
             volume: Trading volume
-            
+
         Returns:
             int: ID of inserted row (or existing row if duplicate)
         """
@@ -112,13 +112,13 @@ class PriceRepository:
 
     async def save_many(self, symbol_id: int, candles: list[dict]) -> int:
         """Save multiple price data points (batch insert).
-        
+
         More efficient than calling save() multiple times.
-        
+
         Args:
             symbol_id: Symbol database ID
             candles: List of candle dicts with keys: timestamp, open, high, low, close, volume
-            
+
         Returns:
             int: Number of rows inserted/updated
         """
@@ -165,12 +165,12 @@ class PriceRepository:
         end_time: int
     ) -> list[PriceData]:
         """Get price data for a time range.
-        
+
         Args:
             symbol_id: Symbol database ID
             start_time: Start timestamp in milliseconds (inclusive)
             end_time: End timestamp in milliseconds (inclusive)
-            
+
         Returns:
             List of PriceData ordered by timestamp ascending
         """
@@ -187,10 +187,10 @@ class PriceRepository:
 
     async def get_latest(self, symbol_id: int) -> PriceData | None:
         """Get the most recent price data for a symbol.
-        
+
         Args:
             symbol_id: Symbol database ID
-            
+
         Returns:
             Most recent PriceData or None if no data
         """
@@ -216,14 +216,14 @@ class PriceRepository:
         limit: int = 1
     ) -> list[PriceData]:
         """Get price data before a specific timestamp.
-        
+
         Useful for getting historical context before a specific time.
-        
+
         Args:
             symbol_id: Symbol database ID
             timestamp: Reference timestamp in milliseconds
             limit: Maximum number of records to return
-            
+
         Returns:
             List of PriceData ordered by timestamp descending (most recent first)
         """
@@ -246,12 +246,12 @@ class PriceRepository:
         limit: int = 100
     ) -> list[PriceData]:
         """Get price data after a specific timestamp.
-        
+
         Args:
             symbol_id: Symbol database ID
             timestamp: Reference timestamp in milliseconds
             limit: Maximum number of records to return
-            
+
         Returns:
             List of PriceData ordered by timestamp ascending
         """
@@ -269,10 +269,10 @@ class PriceRepository:
 
     async def count(self, symbol_id: int) -> int:
         """Count total price data records for a symbol.
-        
+
         Args:
             symbol_id: Symbol database ID
-            
+
         Returns:
             Number of price records
         """
@@ -290,12 +290,12 @@ class PriceRepository:
         end_time: int
     ) -> int:
         """Delete price data for a time range.
-        
+
         Args:
             symbol_id: Symbol database ID
             start_time: Start timestamp in milliseconds
             end_time: End timestamp in milliseconds
-            
+
         Returns:
             Number of rows deleted
         """
