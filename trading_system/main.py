@@ -19,6 +19,7 @@ from trading_system.config import Settings
 from trading_system.database import DatabaseManager
 from trading_system.heartbeat.coordinator import HeartbeatCoordinator
 from trading_system.logger import log_manager
+from trading_system.services import BackfillService
 
 
 class TradingSystem:
@@ -81,6 +82,18 @@ class TradingSystem:
         print("💱 Initializing Binance client...")
         self.binance_client = BinanceClient(self.settings)
         await self.binance_client.initialize()
+
+        # Initialize backfill service and run gap-filling on startup
+        if self.settings.gap_fill_enabled:
+            print("📊 Running gap-filling backfill for all symbols...")
+            backfill_service = BackfillService(
+                self.binance_client,
+                self.db,
+                self.settings
+            )
+            await backfill_service.backfill_all_symbols()
+        else:
+            print("📊 Gap-filling disabled, skipping startup backfill")
 
         # Initialize heartbeat coordinator
         print("💓 Starting heartbeat coordinator...")

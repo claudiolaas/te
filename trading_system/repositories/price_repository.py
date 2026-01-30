@@ -218,6 +218,30 @@ class PriceRepository:
 
         return PriceData.from_row(row)
 
+    async def get_oldest(self, symbol_id: int) -> PriceData | None:
+        """Get the oldest price data for a symbol.
+
+        Args:
+            symbol_id: Symbol database ID
+
+        Returns:
+            Oldest PriceData or None if no data
+        """
+        row = await self._db.fetch_one(
+            """
+            SELECT * FROM price_data 
+            WHERE symbol_id = ?
+            ORDER BY timestamp ASC
+            LIMIT 1
+            """,
+            (symbol_id,)
+        )
+
+        if row is None:
+            return None
+
+        return PriceData.from_row(row)
+
     async def get_before(
         self,
         symbol_id: int,

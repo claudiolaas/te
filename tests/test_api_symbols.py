@@ -188,9 +188,12 @@ class TestAPISymbols:
         mock_db.execute = AsyncMock(return_value=mock_cursor)
 
         # Mock backfill service
-        mock_backfill.backfill_symbol = AsyncMock(return_value=[
-            {"timestamp": 1234567890000, "close": 50000.0}
-        ])
+        mock_backfill.backfill_symbol = AsyncMock(return_value={
+            "symbol": "BTC/USDT",
+            "status": "success",
+            "strategy": "full_backfill",
+            "records_stored": 1,
+        })
         mock_backfill.get_backfill_status = AsyncMock(return_value={
             "symbol": "BTC/USDT",
             "total_records": 1,
@@ -318,7 +321,12 @@ class TestAPISymbolsIntegration:
 
         # Mock backfill service
         mock_backfill = MagicMock()
-        mock_backfill.backfill_symbol = AsyncMock(return_value=[])
+        mock_backfill.backfill_symbol = AsyncMock(return_value={
+            "symbol": "BTC/USDT",
+            "status": "success",
+            "strategy": "full_backfill",
+            "records_stored": 0,
+        })
         mock_backfill.get_backfill_status = AsyncMock(return_value={
             "symbol": "BTC/USDT",
             "total_records": 0,

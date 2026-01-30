@@ -233,17 +233,17 @@ async def create_symbol(
         ) from e
 
     # Trigger automatic backfill
-    backfill_results = []
+    backfill_result = {}
     backfill_error = None
     try:
-        backfill_results = await backfill_service.backfill_symbol(symbol_data.symbol)
+        backfill_result = await backfill_service.backfill_symbol(symbol_data.symbol)
     except Exception as e:
         # Log the error but don't fail the registration
         backfill_error = str(e)
 
     # Get backfill status
     backfill_status = await backfill_service.get_backfill_status(symbol_data.symbol)
-    backfill_status['backfilled_records'] = len(backfill_results)
+    backfill_status['backfill_result'] = backfill_result
     if backfill_error:
         backfill_status['backfill_error'] = backfill_error
 
@@ -260,8 +260,8 @@ async def create_symbol(
     message = f"Symbol '{symbol_data.symbol}' registered successfully"
     if backfill_error:
         message += f" but backfill failed: {backfill_error}"
-    elif backfill_results:
-        message += f" with {len(backfill_results)} historical records"
+    elif backfill_result.get('records_stored', 0) > 0:
+        message += f" with {backfill_result['records_stored']} historical records"
 
     return SymbolCreateResponse(
         symbol=symbol_response,

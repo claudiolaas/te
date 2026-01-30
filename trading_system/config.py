@@ -24,6 +24,9 @@ class Settings(BaseSettings):
 
     # Backfill
     backfill_minutes: int = Field(default=5, ge=1, le=1000, description="Minutes of historical data to fetch")
+    gap_fill_enabled: bool = Field(default=True, description="Enable automatic gap filling on startup")
+    gap_fill_threshold_minutes: int = Field(default=1, ge=0, description="Minimum gap in minutes to trigger fill")
+    max_gap_fill_minutes: int = Field(default=1000, ge=1, description="Maximum gap in minutes to fill in one operation")
 
     # Heartbeat
     heartbeat_interval: int = Field(default=60, ge=10, description="Heartbeat interval in seconds")
