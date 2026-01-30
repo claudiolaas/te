@@ -6,7 +6,9 @@ from dataclasses import dataclass
 from trading_system.clients import BinanceClient
 from trading_system.database import DatabaseManager
 from trading_system.repositories import PriceRepository, SymbolRepository
-from trading_system.utils import RetryConfig, with_retry
+from tenacity import retry
+
+from trading_system.utils.retry import DEFAULT_RETRY
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +107,7 @@ class PriceFetcher:
 
         return results
 
-    @with_retry(RetryConfig(max_attempts=3, base_delay=1.0))
+    @retry(**DEFAULT_RETRY)
     async def _fetch_tickers_with_retry(
         self,
         symbol_names: list[str]
